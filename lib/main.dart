@@ -23,38 +23,15 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      // home: MyHomePage(title: 'Flutter Demo Home Page'),
+       home: MyHomePage(title: 'Startup Name Generator'),
 
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Welcome to Flutter'),
-        ),
-        body: Center(
-          child: RandomWords(),
-        ),
-      ),
     );
   }
 }
 
-class RandomWordsState extends State<RandomWords> {
-  // A basic build method that generates the word pairs.
-  @override
-  Widget build(BuildContext context) {
-    final wordPair = WordPair.random();
-    return Text(wordPair.asPascalCase);
-  }
-}
-
 // Stateful widgets maintain state that might change during the lifetime of
-// the widget.
-class RandomWords extends StatefulWidget {
-  // The StatefulWidget class is, itself, immutable, but the State class
-  // persists over the lifetime of the widget.
-  @override
-  RandomWordsState createState() => RandomWordsState();
-}
-
+// the widget. The StatefulWidget class is, itself, immutable, but the State
+// class persists over the lifetime of the widget.
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -74,68 +51,66 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  // For saving suggested word pairings.
+  final _suggestions = <WordPair>[];
+
+  // Variable for making the font size larger.
+  final _biggerFont = const TextStyle(fontSize: 18.0);
+
+  // A basic build method that generates the word pairs.
+  Widget _buildSuggestions() {
+    return ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        // The itemBuilder callback is called once per suggested word pairing,
+        // and places each suggestion into a ListTile row. For even rows, the
+        // function adds a ListTile row for the word pairing. For odd rows, the
+        // function adds a Divider widget to visually separate the entries.
+        // Note that the divider might be difficult to see on smaller devices.
+        itemBuilder: (context, i) {
+          // Add a one-pixel-high divider widget before each row in the ListView.
+          if (i.isOdd) return Divider();
+
+          // The expression i ~/ 2 divides i by 2 and returns an integer result.
+          // For example: 1, 2, 3, 4, 5 becomes 0, 1, 1, 2, 2. This calculates
+          // the actual number of word pairings in the ListView, minus the
+          // divider widgets.
+          final index = i ~/ 2;
+          if (index >= _suggestions.length) {
+            // If you’ve reached the end of the available word pairings, then
+            // generate 10 more and add them to the suggestions list.
+            _suggestions.addAll(generateWordPairs().take(10));
+          }
+          return _buildRow(_suggestions[index]);
+        });
+  }
+
+  Widget _buildRow(WordPair pair) {
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: _biggerFont,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
+    // This method is rerun every time setState is called.
+
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
+    // Scaffold implements the basic Material Design visual layout.
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have clicked the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: _buildSuggestions(),
     );
   }
+
 }

@@ -1,9 +1,12 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MyApp()); // Use arrow notation for one-line method.
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  // This widget is the root of your application. It makes the app itself a
+  // widget. In Flutter, almost everything is a widget, including alignment,
+  // padding, and layout.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,9 +23,36 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      // home: MyHomePage(title: 'Flutter Demo Home Page'),
+
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Welcome to Flutter'),
+        ),
+        body: Center(
+          child: RandomWords(),
+        ),
+      ),
     );
   }
+}
+
+class RandomWordsState extends State<RandomWords> {
+  // A basic build method that generates the word pairs.
+  @override
+  Widget build(BuildContext context) {
+    final wordPair = WordPair.random();
+    return Text(wordPair.asPascalCase);
+  }
+}
+
+// Stateful widgets maintain state that might change during the lifetime of
+// the widget.
+class RandomWords extends StatefulWidget {
+  // The StatefulWidget class is, itself, immutable, but the State class
+  // persists over the lifetime of the widget.
+  @override
+  RandomWordsState createState() => RandomWordsState();
 }
 
 class MyHomePage extends StatefulWidget {

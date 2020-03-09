@@ -104,6 +104,20 @@ class _MyHomePageState extends State<MyHomePage> {
         alreadySaved ? Icons.favorite : Icons.favorite_border,
         color: alreadySaved ? Colors.red : null,
       ),
+      // When the user taps an entry in the list, toggling its "favored" state,
+      // that word pairing is added or removed from a set of saved favorites.
+      onTap: () {
+        // Notify the framework that state has changed. In Flutter's reactive
+        // style framework, calling setState() triggers a call to the build()
+        // method for the State object, resulting in an update to the UI.
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
     );
   }
 

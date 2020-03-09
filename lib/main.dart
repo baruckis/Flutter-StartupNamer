@@ -55,6 +55,9 @@ class _MyHomePageState extends State<MyHomePage> {
   // For saving suggested word pairings.
   final _suggestions = <WordPair>[];
 
+  // Set stores the word pairings that the user favored.
+  final Set<WordPair> _saved = Set<WordPair>();
+
   // Variable for making the font size larger.
   final _biggerFont = const TextStyle(fontSize: 18.0);
 
@@ -86,10 +89,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildRow(WordPair pair) {
+
+    // Check to ensure that a word pairing has not already been added to
+    // favorites.
+    final bool alreadySaved = _saved.contains(pair);
+
     return ListTile(
       title: Text(
         pair.asPascalCase,
         style: _biggerFont,
+      ),
+      // Add heart-shaped icons to the ListTile objects to enable favoring.
+      trailing: Icon(
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
       ),
     );
   }

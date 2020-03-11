@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-       home: MyHomePage(title: 'Startup Name Generator'),
-
+      home: MyHomePage(title: 'Startup Name Generator'),
     );
   }
 }
@@ -51,7 +50,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   // For saving suggested word pairings.
   final _suggestions = <WordPair>[];
 
@@ -89,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildRow(WordPair pair) {
-
     // Check to ensure that a word pairing has not already been added to
     // favorites.
     final bool alreadySaved = _saved.contains(pair);
@@ -135,9 +132,53 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        // We add a list icon to the AppBar. When the user clicks the list icon,
+        // a new route that contains the saved favorites is pushed to the
+        // Navigator, displaying the icon.
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+        ],
       ),
       body: _buildSuggestions(),
     );
   }
 
+  void _pushSaved() {
+    Navigator.of(context).push(
+      // The content for the new page is built in MaterialPageRoute's builder
+      // property, in an anonymous function.
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          final Iterable<ListTile> tiles = _saved.map(
+            (WordPair pair) {
+              return ListTile(
+                title: Text(
+                  pair.asPascalCase,
+                  style: _biggerFont,
+                ),
+              );
+            },
+          );
+          // Variable holds the final rows, converted to a list.
+          final List<Widget> divided = ListTile
+          // Method of ListTile adds horizontal spacing between each ListTile.
+              .divideTiles(
+            context: context,
+            tiles: tiles,
+          ).toList();
+
+          // The builder property returns a Scaffold, containing the app bar
+          // for the new route, named "Saved Suggestions." The body of the new
+          // route consists of a ListView containing the ListTiles rows; each
+          // row is separated by a divider.
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Saved Suggestions'),
+            ),
+            body: ListView(children: divided),
+          );
+        },
+      ),
+    );
+  }
 }

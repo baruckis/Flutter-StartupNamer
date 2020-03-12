@@ -1,10 +1,15 @@
-# flutterstartupnamer
+# Flutter-StartupNamer
 
-A Codelabs Flutter application.
+This is a simple mobile app that generates proposed names for a startup company.
+
+## Technology
+
+Build with Flutter - an open-source UI software development kit created by Google. 
+Developed using Dart - a client-optimized programming language for apps on multiple platforms.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is based on the Google Codelabs "Write your first Flutter app".
 
 A few resources to get you started if this is your first Flutter project:
 
